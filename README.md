@@ -1,4 +1,4 @@
-# generator-awesome-gulp-setup [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
+# generator-awesome-gulp-setup [![NPM version][npm-image]][npm-url]
 > Simple Gulp setup for everyday projects
 
 ## Installation
@@ -13,7 +13,7 @@ npm install -g generator-awesome-gulp-setup
 Then generate your new project:
 
 ```bash
-yo awesome-awesome-gulp-setup
+yo awesome-gulp-setup
 ```
 
 ## Getting To Know Yeoman
