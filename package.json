@@ -1,0 +1,35 @@
+{
+  "name": "generator-awesome-gulp-setup",
+  "version": "0.0.0",
+  "description": "Simple Gulp setup for everyday projects, made with <3 at Proximity BBDO",
+  "homepage": "http://www.proximity.bbdo.fr/",
+  "author": {
+    "name": "Pierrick Pluchon",
+    "email": "pluchonp@proximity.bbdo.fr",
+    "url": "http://www.proximity.bbdo.fr/"
+  },
+  "files": [
+    "generators"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ppluchon/awesome-gulp-setup.git"
+  },
+  "main": "generators/index.js",
+  "keywords": [
+    "Gulp"
+  ],
+  "devDependencies": {
+    "chalk": "^1.1.1",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-plumber": "^1.0.1",
+    "gulp-sass": "^2.1.1",
+    "gulp-uglify": "^1.5.1",
+    "gulp-webpack": "^1.5.0",
+    "lodash": "^4.2.0",
+    "minimist": "^1.2.0",
+    "slug": "^0.9.1",
+    "yeoman-generator": "^0.22.5",
+    "yosay": "^1.1.0"
+  }
+}
