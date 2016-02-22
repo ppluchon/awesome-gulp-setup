@@ -61,6 +61,18 @@ module.exports = yeoman.Base.extend({
     },
     {
       when:function(props) {
+        return _.includes(props.features, 'includeEslint')
+      },
+      type:'list',
+      name:'eslintRules',
+      message : 'Choose your Eslint rules',
+      choices : [
+        "Airbnb",
+        "StandardJS"
+      ]
+    },
+    {
+      when:function(props) {
         return _.includes(props.features, 'includeBrowsersync')
       },
       type:'confirm',
@@ -83,6 +95,7 @@ module.exports = yeoman.Base.extend({
 
     this.prompt(prompts, function (props) {
       this.props = props;
+      // console.log(this.props)
       // To access props later use this.props.someOption;
       this.appName = this.props.appName;
       this.includeJquery = _.includes(this.props.features, 'includeJquery');
@@ -91,6 +104,7 @@ module.exports = yeoman.Base.extend({
       this.includeEslint = _.includes(this.props.features, 'includeEslint');
       this.includeImagemin = _.includes(this.props.features, 'includeImagemin');
       this.includeWebserver = _.includes(this.props.features, 'includeBrowsersync');
+      this.linterParser = (this.props.eslintRules != undefined) ? this.props.eslintRules : ''; 
       this.hasVhost = (this.props.vhost != undefined)? this.props.vhost : false;
       this.vhostName = (this.props.vhostName != undefined)? this.props.vhostName: '';
       done();
@@ -191,9 +205,12 @@ module.exports = yeoman.Base.extend({
         this.destinationPath('src/scss/main.scss')
       );
     if(this.includeEslint) {
-      this.fs.copy(
+      this.fs.copyTpl(
         this.templatePath('_eslintrc.json'),
-        this.destinationPath('.eslintrc.json')
+        this.destinationPath('.eslintrc.json'),
+        {
+          parser : this.linterParser
+        }
       );
     }
     if(this.includeBower)

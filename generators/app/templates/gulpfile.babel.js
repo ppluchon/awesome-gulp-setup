@@ -21,45 +21,84 @@ var options = minimist(process.argv.slice(2), knownOptions);
 
 
 gulp.task('sass', function(){
-	if(options.production)
-	{
-		return gulp.src('src/scss/*.scss')
-		.pipe(plumber())
-		.pipe(sass.sync({
-			outputStyle: 'compressed',
-			errLogToConsole: true
-		}))
-		.pipe(autoprefixer({
-            browsers: ['last 3 versions'],
-            cascade: false
-        }))
-		.pipe(gulp.dest("public/dist/css"))
-		.pipe(browserSync.stream())
-	} else {
-		return gulp.src('src/scss/*.scss')
-		.pipe(plumber())
-		.pipe(sass.sync({
-			errLogToConsole: true
-		}))
-		.pipe(gulp.dest("public/dist/css"))
-		.pipe(browserSync.stream())
-	}
+	<% if(includeWebserver) { %>
+		if(options.production)
+		{
+			return gulp.src('src/scss/*.scss')
+			.pipe(plumber())
+			.pipe(sass.sync({
+				outputStyle: 'compressed',
+				errLogToConsole: true
+			}))
+			.pipe(autoprefixer({
+	            browsers: ['last 3 versions'],
+	            cascade: false
+	        }))
+			.pipe(gulp.dest("public/dist/css"))
+			.pipe(browserSync.stream())
+		} else {
+			return gulp.src('src/scss/*.scss')
+			.pipe(plumber())
+			.pipe(sass.sync({
+				errLogToConsole: true
+			}))
+			.pipe(gulp.dest("public/dist/css"))
+			.pipe(browserSync.stream())
+		}
+	<% } else {%>
+		if(options.production)
+		{
+			return gulp.src('src/scss/*.scss')
+			.pipe(plumber())
+			.pipe(sass.sync({
+				outputStyle: 'compressed',
+				errLogToConsole: true
+			}))
+			.pipe(autoprefixer({
+	            browsers: ['last 3 versions'],
+	            cascade: false
+	        }))
+			.pipe(gulp.dest("public/dist/css"))
+		} else {
+			return gulp.src('src/scss/*.scss')
+			.pipe(plumber())
+			.pipe(sass.sync({
+				errLogToConsole: true
+			}))
+			.pipe(gulp.dest("public/dist/css"))
+		}
+	<% } %>
+	
 	
 });
 
 gulp.task('webpack', function(){
-	if(options.production)
-	{
-		return gulp.src('src/js/main.js')
-		.pipe(webpack( require('./webpack.production.config.js') ))
-		.pipe(gulp.dest('public/dist/js/'))
-		.pipe(browserSync.stream());
-	} else {
-		return gulp.src('src/js/main.js')
-		.pipe(webpack(require('./webpack.config.js') ))
-		.pipe(gulp.dest('public/dist/js/'))
-		.pipe(browserSync.stream());
-	}
+	<% if(includeWebserver) { %>
+		if(options.production)
+		{
+			return gulp.src('src/js/main.js')
+			.pipe(webpack( require('./webpack.production.config.js') ))
+			.pipe(gulp.dest('public/dist/js/'))
+			.pipe(browserSync.stream());
+		} else {
+			return gulp.src('src/js/main.js')
+			.pipe(webpack(require('./webpack.config.js') ))
+			.pipe(gulp.dest('public/dist/js/'))
+			.pipe(browserSync.stream());
+		}
+	<% } else {%>
+		if(options.production)
+		{
+			return gulp.src('src/js/main.js')
+			.pipe(webpack( require('./webpack.production.config.js') ))
+			.pipe(gulp.dest('public/dist/js/'))
+		} else {
+			return gulp.src('src/js/main.js')
+			.pipe(webpack(require('./webpack.config.js') ))
+			.pipe(gulp.dest('public/dist/js/'))
+		}
+	<% } %>
+	
 })
 
 <% if(includeImagemin) {%>
@@ -90,7 +129,7 @@ gulp.task('default', [<% if(includeImagemin) {%>'imagemin',<% } %> 'webpack', 's
 		<% } %>
 	<% } %>
 
-	gulp.watch("src/js/**.js", ['webpack']);
+	gulp.watch("src/js/**/*.js", ['webpack']);
 	gulp.watch("src/scss/**/*.scss", ['sass']);
 	<% if(includeWebserver) { %>
 	gulp.watch("public/*.html").on('change', browserSync.reload);
