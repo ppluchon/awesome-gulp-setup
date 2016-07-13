@@ -7,6 +7,12 @@ var autoprefixer = require('gulp-autoprefixer');
 var plumber = require('gulp-plumber');
 var minimist = require('minimist');
 var webpack = require('gulp-webpack');
+<% if (templatingFwk === 'Jade') {%>
+var jade = require('gulp-jade');
+<% } %>
+<% if (templatingFwk === 'Hogan') {%>
+var compiler = require('gulp-hogan-compile');
+<% } %>
 <% if(includeImagemin) {%>
 var imagemin = require('gulp-imagemin');
 var pngquant = require('imagemin-pngquant');
@@ -110,7 +116,26 @@ gulp.task('imagemin', () => {
         .pipe(gulp.dest('public/assets'));
 });
 <% } %>
-gulp.task('default', [<% if(includeImagemin) {%>'imagemin',<% } %> 'webpack', 'sass'], function(){
+
+<% if (templatingFwk) {%>
+<% if (templatingFwk === 'Hogan') {%>
+gulp.task('templates', function() {
+  return gulp.src('src/templates/**/*.html')
+      .pipe(compiler('HoganTemplates.js', {wrapper:'commonjs'}))
+      .pipe(gulp.dest('src/js/app/views/hogan'));
+});
+<% } %>
+<% if (templatingFwk === 'Jade') {%>
+gulp.task('templates', function() {
+  return gulp.src('src/templates/**/[^_]*.jade')
+    .pipe(plumber())
+    .pipe(jade())
+    .pipe(gulp.dest('dist/'));
+});
+<% } %>
+<% } %>
+
+gulp.task('default', [<% if(includeImagemin) {%>'imagemin',<% } %> <% if(templatingFwk) {%>'templates',<% } %> 'webpack', 'sass'], function(){
   <% if(hasVhost) {%>
       browserSync.init({
         proxy: "<%= vhostName %>"

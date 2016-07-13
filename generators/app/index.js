@@ -38,6 +38,11 @@ module.exports = yeoman.Base.extend({
           checked: false
         },
         {
+          name: 'include templating framework?',
+          value: 'includeTemplating',
+          checked: false
+        },
+        {
           name:'Es6 flavour with Babel + Webpack ?',
           value:'includeBabel',
           checked: true
@@ -61,6 +66,18 @@ module.exports = yeoman.Base.extend({
     },
     {
       when:function(props) {
+        return _.includes(props.features, 'includeTemplating')
+      },
+      type:'list',
+      name:'templatingFwk',
+      message : 'Choose your Templating framework',
+      choices : [
+        "Jade",
+        "Hogan"
+      ]
+    },
+    {
+      when:function(props) {
         return _.includes(props.features, 'includeEslint')
       },
       type:'list',
@@ -68,7 +85,7 @@ module.exports = yeoman.Base.extend({
       message : 'Choose your Eslint rules',
       choices : [
         "Airbnb",
-        "StandardJS"
+        "standard"
       ]
     },
     {
@@ -95,7 +112,6 @@ module.exports = yeoman.Base.extend({
 
     this.prompt(prompts, function (props) {
       this.props = props;
-      // console.log(this.props)
       // To access props later use this.props.someOption;
       this.appName = this.props.appName;
       this.includeJquery = _.includes(this.props.features, 'includeJquery');
@@ -103,8 +119,10 @@ module.exports = yeoman.Base.extend({
       this.includeBabel = _.includes(this.props.features, 'includeBabel');
       this.includeEslint = _.includes(this.props.features, 'includeEslint');
       this.includeImagemin = _.includes(this.props.features, 'includeImagemin');
+      this.includeTemplating = _.includes(this.props.features, 'includeTemplating');
       this.includeWebserver = _.includes(this.props.features, 'includeBrowsersync');
       this.linterParser = (this.props.eslintRules != undefined) ? this.props.eslintRules : ''; 
+      this.templatingFwk = (this.props.templatingFwk != undefined) ? this.props.templatingFwk : ''; 
       this.hasVhost = (this.props.vhost != undefined)? this.props.vhost : false;
       this.vhostName = (this.props.vhostName != undefined)? this.props.vhostName: '';
       done();
@@ -135,21 +153,24 @@ module.exports = yeoman.Base.extend({
       {
         appName : slug(this.appName).toLowerCase(),
         description : "",
-        includeImagemin : this.includeImagemin
+        includeImagemin : this.includeImagemin,
+        templatingFwk: this.templatingFwk
       }
     );
     this.fs.copyTpl(
       this.templatePath('webpack.config.js'),
       this.destinationPath('webpack.config.js'),
       {
-        Eslint : this.includeEslint
+        Eslint : this.includeEslint,
+        templatingFwk: this.templatingFwk
       }
     );
     this.fs.copyTpl(
       this.templatePath('webpack.production.config.js'),
       this.destinationPath('webpack.production.config.js'),
       {
-        Eslint : this.includeEslint
+        Eslint : this.includeEslint,
+        templatingFwk: this.templatingFwk
       }
     );   
     if(this.includeBabel)
@@ -163,7 +184,8 @@ module.exports = yeoman.Base.extend({
           hasVhost : this.hasVhost,
           vhostName : this.vhostName,
           Eslint : this.includeEslint,
-          includeImagemin : this.includeImagemin
+          includeImagemin : this.includeImagemin,
+          templatingFwk: this.templatingFwk
         }
       );
       this.fs.copy(
@@ -184,7 +206,8 @@ module.exports = yeoman.Base.extend({
           hasVhost : this.hasVhost,
           vhostName : this.vhostName,
           Eslint : this.includeEslint,
-          includeImagemin : this.includeImagemin
+          includeImagemin : this.includeImagemin,
+          templatingFwk: this.templatingFwk
         }
       );
       this.fs.copy(

@@ -17,7 +17,7 @@ module.exports = {
                 query: {
                     // https://github.com/babel/babel-loader#options
                     cacheDirectory: true,
-                    presets: ['es2015', 'stage-2']
+                    presets: ['es2015', 'stage-1']
                 }
             }
         ],
@@ -26,8 +26,27 @@ module.exports = {
                 {test: /\.js$/, loader: "eslint-loader", exclude: /node_modules/}
             <% } %>
         ]
-  },
+    },
+    resolve: {
+        alias: {
+            'hogan': path.resolve('node_modules', 'hogan.js/lib/hogan.js'),
+            // 'TweenLite': path.resolve('node_modules', 'gsap/src/uncompressed/TweenLite.js'),
+            // 'TweenMax': path.resolve('node_modules', 'gsap/src/uncompressed/TweenMax.js'),
+            // 'TimelineLite': path.resolve('node_modules', 'gsap/src/uncompressed/TimelineLite.js'),
+            // 'TimelineMax': path.resolve('node_modules', 'gsap/src/uncompressed/TimelineMax.js'),
+            // 'EasePack': path.resolve('node_modules', 'gsap/src/uncompressed/easing/EasePack.js'),
+            // 'SplitText': path.resolve('__src', 'js/app/extra/SplitText.js'),
+            // 'DrawSVGPlugin': path.resolve('__src', 'js/app/extra/DrawSVGPlugin.js'),
+            // 'ColorPropsPlugin': path.resolve('__src', 'gsap/src/uncompressed/plugins/ColorPropsPlugin.js')
+        },
+        modulesDirectories: ['node_modules']
+    },
     plugins: [
+         new webpack.DefinePlugin({
+            'process.env': {
+              'NODE_ENV': JSON.stringify('production')
+            }
+        }),
         new webpack.optimize.UglifyJsPlugin({ minimize: true, sourceMap: true })
     ],
 };
